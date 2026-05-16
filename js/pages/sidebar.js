@@ -27,10 +27,10 @@ function compressImg(file, mw=400, q=.6) {
 
 /* ===== PROFILE ===== */
 function populateProfileForm() {
-  console.log("Membuka halaman Profile...");
+  console.log("✅ SIDEBAR: Membuka halaman Profile...");
   const state = getState();
   const nameInput = $('#profileName');
-  if (!nameInput) { console.error("Input #profileName tidak ditemukan di HTML!"); return; }
+  if (!nameInput) { console.error("❌ Input #profileName tidak ditemukan!"); return; }
   
   nameInput.value = state.userName;
   if($('#profileEmail')) $('#profileEmail').value = state.userEmail;
@@ -81,10 +81,10 @@ function updateAboutLogo() {
 
 /* ===== CHART OF ACCOUNT ===== */
 export function renderCOA() {
-  console.log("Merender Chart of Account...");
+  console.log("✅ SIDEBAR: Merender Chart of Account...");
   const state = getState();
   const list = $('#coaList');
-  if(!list) { console.error("Container #coaList tidak ditemukan!"); return; }
+  if(!list) { console.error("❌ Container #coaList tidak ditemukan!"); return; }
 
   list.innerHTML = '';
   state.accounts.forEach(acc => {
@@ -144,19 +144,24 @@ function openEditAccount(acc) {
 
 /* ===== INIT SIDEBAR ===== */
 export function initSidebar() {
-  console.log("Inisialisasi Module Sidebar...");
+  console.log("🚀 SIDEBAR MODULE LOADED V1.0...");
   const state = getState();
   const dashName = $('#dashUserName');
   if(dashName) dashName.textContent = state.userName;
-  
   updateLogoWithPhoto();
 
-  // 1. Listen ketika halaman sidebar dibuka
-  window.addEventListener('sidebarPageChange', (e) => {
-    const page = e.detail.page;
-    if(page === 'profile') populateProfileForm();
-    if(page === 'coa') renderCOA();
-    if(page === 'about') updateAboutLogo();
+  // 1. BIND TOMBOL SIDEBAR LANGSUNG (Paling aman dari bug event dispatch)
+  const sbItems = $$('.sb-item[data-sb]');
+  sbItems.forEach(item => {
+    if(!item.dataset.sidebarBound) {
+      item.dataset.sidebarBound = 'true';
+      item.addEventListener('click', () => {
+        const key = item.dataset.sb;
+        if(key === 'profile') populateProfileForm();
+        if(key === 'coa') renderCOA();
+        if(key === 'about') updateAboutLogo();
+      });
+    }
   });
 
   // 2. Profile Photo
@@ -164,7 +169,10 @@ export function initSidebar() {
   const photoInput = $('#photoInput');
   if(photoBtn && !photoBtn.dataset.bound) {
     photoBtn.dataset.bound = 'true';
-    photoBtn.addEventListener('click', () => { if(photoInput) photoInput.click(); });
+    photoBtn.addEventListener('click', () => {
+      console.log("📷 Tombol foto diklik, trigger input...");
+      if(photoInput) photoInput.click();
+    });
   }
   if(photoInput && !photoInput.dataset.bound) {
     photoInput.dataset.bound = 'true';
