@@ -1,0 +1,22 @@
+{
+  "name": "Shadow — Financial Tracker",
+  "short_name": "Shadow",
+  "description": "Aplikasi pencatatan keuangan pribadi yang simpel dan pribadi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0D9488",
+  "lang": "id",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": []
+}
