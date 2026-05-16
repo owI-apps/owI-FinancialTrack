@@ -1,68 +1,47 @@
-console.log("🔥🔥🔥 OWI APP.JS V2.0 STARTED 🔥🔥🔥"); // Tanda kalau ini file versi terbaru
+const CACHE_NAME = 'owi-fintrack-v5'; // Ganti jadi v5 biar cache lama yang error langsung dihapus
+const urlsToCache = [
+  './',
+  './index.html',
+  './css/style.css',
+  './js/app.js',
+  './js/db.js',
+  './js/ui.js',
+  './js/i18n.js',
+  './js/utils.js',
+  './assets/icons/icon-192x192.png',
+  './assets/icons/logo-512.png'
+];
 
-import { loadState, getState } from './db.js';
-import { applyI18n, setLang } from './i18n.js';
-import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
-import { initDashboard } from './pages/dashboard.js';
-import { initMutation } from './pages/mutation.js';
-import { initTransaction } from './pages/transaction.js';
-import { initBills } from './pages/bills.js';
-import { initHistory } from './pages/history.js';
-import { initSidebar } from './pages/sidebar.js';
-
-/* ===== INITIALIZATION ===== */
-
-loadState();
-const state = getState();
-
-initCoreUI();
-lucide.createIcons();
-
-setLang(state.lang || 'id');
-setTheme(state.theme || 'light');
-applyI18n();
-updateGreeting();
-updateDashTime();
-
-// Init All Modules
-initDashboard();
-initSidebar(); // Inisialisasi listener sidebar, profil, COA
-
-/* ===== EVENT LISTENERS ===== */
-window.addEventListener('pageChange', (e) => {
-  const page = e.detail.page;
-  
-  if(page === 'dashboard') {
-    import('./pages/dashboard.js').then(mod => mod.initDashboard());
-  }
-  if(page === 'mutasi') {
-    import('./pages/mutation.js').then(mod => mod.initMutation());
-  }
-  if(page === 'tambah') {
-    import('./pages/transaction.js').then(mod => mod.initTransaction());
-  }
-  if(page === 'tagihan') {
-    import('./pages/bills.js').then(mod => mod.initBills());
-  }
-  if(page === 'riwayat') {
-    import('./pages/history.js').then(mod => mod.initHistory());
-  }
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Caching core assets v5');
+        return cache.addAll(urlsToCache);
+      })
+      .catch(err => console.error('Failed to cache:', err))
+  );
+  self.skipWaiting();
 });
 
-window.addEventListener('langChange', () => {
-  import('./pages/dashboard.js').then(mod => mod.initDashboard());
-  import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
-  import('./pages/transaction.js').then(mod => mod.renderActHistory());
-  import('./pages/bills.js').then(mod => mod.renderTagList());
-  import('./pages/history.js').then(mod => mod.renderHistory());
-  import('./pages/sidebar.js').then(mod => mod.renderCOA()); 
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
 
-/* ===== SERVICE WORKER ===== */
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(r => console.log('SW terdaftar:', r.scope))
-      .catch(e => console.log('SW gagal:', e));
-  });
-}
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName); // Hapus cache v4 yang error tadi
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
