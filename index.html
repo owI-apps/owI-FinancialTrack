@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
-  <header class="header" id="header">
-    <!-- GANTI INI: Permanen pakai icon PNG -->
-    <button class="logo-btn" id="logoBtn" aria-label="Buka menu sidebar">
-      <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
-    </button>
-    <div class="hdr-tg">
-      <div class="hdr-title">owI-FinancialTrack</div>
-      <div class="hdr-sub" data-i18n="financial_tracker">financial tracker</div>
-    </div>
-    <div class="hdr-actions">
-      <button class="install-btn" id="installBtn" aria-label="Install aplikasi"><i data-lucide="download"></i><span data-i18n="install">Install</span></button>
-    </div>
-  </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2c3a0e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="owI-FinTrack">
+  <meta name="application-name" content="owI-FinancialTrack">
+  <meta name="description" content="Aplikasi pencatatan keuangan pribadi owI-FinancialTrack">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- Manifest & Icons PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/logo-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/logo-512.png">
+
+  <!-- Fonts & Lucide -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <title>owI-FinancialTrack</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 <body>
 
   <header class="header" id="header">
+    <!-- LOGO PERMANEN PAKAI ICON PNG -->
     <button class="logo-btn" id="logoBtn" aria-label="Buka menu sidebar">
-      <span class="logo-ar">owI</span>
+      <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
     </button>
     <div class="hdr-tg">
       <div class="hdr-title">owI-FinancialTrack</div>
@@ -34,6 +48,7 @@
   <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menu utama">
     <div class="sb-hdr">
       <div class="sb-brand">
+        <!-- LOGO SIDEBAR DEFAULT PAKAI ICON PNG (Akan diganti foto oleh JS kalau upload) -->
         <div class="sb-logo" id="sbLogo">
           <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
         </div>
@@ -122,7 +137,9 @@
     <div class="sb-nav sb-page" id="sb-about">
       <button class="sb-back" data-back><i data-lucide="arrow-left"></i> <span data-i18n="back_to_sidebar">Kembali ke sidebar</span></button>
       <div class="about-card">
-        <div class="about-logo" id="aboutLogo"><span class="logo-ar">owI</span></div>
+        <div class="about-logo" id="aboutLogo">
+          <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+        </div>
         <div class="about-name">owI-FinancialTrack</div>
         <div class="about-ver">v2.0.0</div>
         <div class="about-desc" id="aboutDesc"></div>
@@ -231,7 +248,7 @@
     <button class="ni" data-pg="riwayat" aria-label="Riwayat"><div class="ni-w"><i data-lucide="history"></i></div><span class="ni-l" data-i18n="history">Riwayat</span></button>
   </nav>
 
-  <!-- Modals (Dipindah tanpa isi JS) -->
+  <!-- Modals -->
   <div class="modal-overlay" id="addAccountModal"><div class="modal"><div class="modal-handle"></div><div class="modal-title" data-i18n="add_new_account">Tambah Akun Baru</div><div class="form-group"><label class="form-label" data-i18n="account_name">Nama Akun</label><input type="text" class="form-input" id="newAccName" placeholder="Contoh: BCA, GoPay"></div><div class="form-group"><label class="form-label" data-i18n="account_type">Jenis Akun</label><select class="form-input" id="newAccType"><option value="" data-i18n="choose_type">Pilih jenis akun</option><option value="Bank">Bank</option><option value="E-Wallet">E-Wallet</option><option value="Crypto">Crypto</option><option value="Asuransi">Asuransi</option></select></div><div class="form-group"><label class="form-label" data-i18n="amount_rp">Nominal (Rp)</label><input type="text" inputmode="numeric" class="form-input" id="newAccBalance" placeholder="0" data-fmt-rp></div><div class="modal-btns"><button class="form-btn form-btn-outline" id="addAccCancel" data-i18n="cancel">Batal</button><button class="form-btn form-btn-primary" id="addAccPost" data-i18n="posting">Posting</button></div></div></div>
   
   <div class="modal-overlay" id="mutasiModal"><div class="modal"><div class="modal-handle"></div><div class="modal-title" data-i18n="do_mutation">Lakukan Mutasi</div><div class="form-group"><label class="form-label" data-i18n="date">Tanggal</label><input type="date" class="form-input" id="mutasiDate"></div><div class="form-group"><label class="form-label" data-i18n="from_account">Dari Akun</label><select class="form-input" id="mutasiFrom"></select></div><div class="form-group"><label class="form-label" data-i18n="to_account">Ke Akun</label><select class="form-input" id="mutasiTo"></select></div><div class="form-group"><label class="form-label" data-i18n="amount_rp">Nominal (Rp)</label><input type="text" inputmode="numeric" class="form-input" id="mutasiAmount" placeholder="0" data-fmt-rp></div><div class="modal-btns"><button class="form-btn form-btn-outline" id="mutasiCancel" data-i18n="cancel">Batal</button><button class="form-btn form-btn-primary" id="mutasiPost" data-i18n="posting">Posting</button></div></div></div>
@@ -253,7 +270,8 @@
   <div class="modal-overlay" id="resetModal"><div class="modal" style="padding:28px 20px 22px"><div class="modal-handle"></div><div style="text-align:center;margin-bottom:8px"><div style="width:48px;height:48px;border-radius:50%;background:var(--red-l);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px"><i data-lucide="alert-triangle" style="width:24px;height:24px;color:var(--red)"></i></div></div><div class="confirm-msg" data-i18n="reset_confirm">Yakin ingin mereset semua data? Tindakan ini tidak dapat dibatalkan.</div><div class="modal-btns"><button class="form-btn form-btn-outline" id="resetCancel" data-i18n="cancel">Batal</button><button class="form-btn form-btn-danger" id="resetYes" data-i18n="reset">Reset</button></div></div></div>
 
   <div class="toast-c"><div class="toast" id="toast"></div></div>
-  
-    <script src="js/app.js?v=3" type="module"></script>
+
+  <!-- Parameter ?v=4 wajib dipakai biar GitHub langsung baca JS terbaru -->
+  <script src="js/app.js?v=4" type="module"></script>
 </body>
 </html>
