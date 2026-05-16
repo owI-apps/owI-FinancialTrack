@@ -5,6 +5,7 @@ import { initDashboard } from './pages/dashboard.js';
 import { initMutation } from './pages/mutation.js';
 import { initTransaction } from './pages/transaction.js';
 import { initBills } from './pages/bills.js';
+import { initHistory } from './pages/history.js'; // <-- Tambahin ini
 
 /* ===== INITIALIZATION ===== */
 
@@ -38,6 +39,9 @@ window.addEventListener('pageChange', (e) => {
   if(page === 'tagihan') {
     import('./pages/bills.js').then(mod => mod.initBills());
   }
+  if(page === 'riwayat') { // <-- Tambah blok ini
+    import('./pages/history.js').then(mod => mod.initHistory());
+  }
 });
 
 window.addEventListener('langChange', () => {
@@ -45,6 +49,7 @@ window.addEventListener('langChange', () => {
   import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
   import('./pages/transaction.js').then(mod => mod.renderActHistory());
   import('./pages/bills.js').then(mod => mod.renderTagList());
+  import('./pages/history.js').then(mod => mod.renderHistory()); // <-- Tambah ini
 });
 
 /* ===== SERVICE WORKER ===== */
