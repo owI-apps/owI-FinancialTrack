@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>owI-FinancialTrack - The Future of Personal Finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon: #85a633;
+      --neon-dim: rgba(133, 166, 51, 0.5);
+      --neon-glow: rgba(133, 166, 51, 0.2);
+      --bg-dark: #05080a;
+      --bg-card: rgba(16, 24, 18, 0.6);
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --glass-border: rgba(133, 166, 51, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* === CYBER BACKGROUND === */
+    .cyber-bg {
+      position: fixed; inset: 0; z-index: -1; overflow: hidden;
+      background: radial-gradient(circle at 50% 0%, #0f1a12 0%, #05080a 70%);
+    }
+    .grid-overlay {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--neon-glow) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--neon-glow) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.15;
+      animation: gridMove 20s linear infinite;
+    }
+    @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(60px); } }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--neon-dim); top: -100px; left: -100px; }
+    .orb-2 { width: 300px; height: 300px; background: #1a2e0a; bottom: -50px; right: -50px; animation-delay: 2s; }
+
+    /* === TYPOGRAPHY === */
+    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.5px; }
+    .neon-text { color: var(--neon); text-shadow: 0 0 10px var(--neon-dim); }
+
+    /* === NAVBAR === */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(5, 8, 10, 0.8); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--neon); display: flex; align-items: center; gap: 10px; }
+    .logo-dot { width: 12px; height: 12px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 10px var(--neon); }
+    .nav-links { display: flex; gap: 30px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+    .nav-links a:hover { color: var(--neon); }
+    .btn-launch {
+      padding: 10px 24px; background: transparent; border: 1px solid var(--neon);
+      color: var(--neon); font-weight: 600; border-radius: 6px; cursor: pointer;
+      transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif;
+    }
+    .btn-launch:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon-dim); }
+
+    /* === HERO SECTION === */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 120px 20px 80px; position: relative;
+    }
+    .hero-tag {
+      display: inline-block; padding: 6px 16px; border: 1px solid var(--glass-border);
+      border-radius: 20px; font-size: 0.8rem; color: var(--neon); margin-bottom: 24px;
+      background: rgba(133, 166, 51, 0.1); letter-spacing: 1px;
+    }
+    .hero-title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; }
+    .hero-sub { max-width: 600px; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
+    
+    /* === GLASSMORPHISM CARDS === */
+    .features { padding: 80px 5%; }
+    .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+    .glass-card {
+      background: var(--bg-card); border: 1px solid var(--glass-border);
+      border-radius: 16px; padding: 32px; position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .glass-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(133, 166, 51, 0.1); border-color: var(--neon); }
+    .glass-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
+    .glass-card:hover::before { opacity: 1; }
+    .card-icon { font-size: 2rem; margin-bottom: 16px; color: var(--neon); }
+    .card-title { font-size: 1.3rem; margin-bottom: 12px; font-weight: 600; }
+    .card-desc { color: var(--text-muted); font-size: 0.95rem; }
+    .tech-stack { display: flex; gap: 10px; margin-top: 20px; }
+    .tech-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 4px; background: rgba(133, 166, 51, 0.1); color: var(--neon); border: 1px solid var(--glass-border); }
+
+    /* === CTA === */
+    .cta { padding: 100px 20px; text-align: center; }
+    .btn-massive {
+      padding: 18px 60px; font-size: 1.2rem; font-weight: 700; background: var(--neon);
+      color: #000; border: none; border-radius: 8px; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+      box-shadow: 0 0 20px var(--neon-dim);
+    }
+    .btn-massive:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--neon); }
+
+    /* === FOOTER === */
+    .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.8rem; }
+
+    /* === ANIMATIONS === */
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @keyframes float { 0% { transform: translateY(0px); } 100% { transform: translateY(20px); } }
+  </style>
+</head>
+<body>
+
+  <div class="cyber-bg">
+    <div class="grid-overlay"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="nav">
+    <div class="logo"><div class="logo-dot"></div>owI-FinTrack</div>
+    <div class="nav-links">
+      <a href="#features">Fitur</a>
+      <a href="#tech">Teknologi</a>
+    </div>
+    <button class="btn-launch" onclick="window.location.href='./index.html'">Buka App</button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-tag">🚀 NEXT-GEN FINANCE TRACKER</div>
+    <h1 class="hero-title">Kelola Keuanganmu<br>Dengan <span class="neon-text">Presisi Masa Depan</span></h1>
+    <p class="hero-sub">owI-FinancialTrack adalah aplikasi pencatatan keuangan berbasis PWA yang menggabungkan desain futuristik dengan keamanan lokal mutlak. Tanpa server, tanpa batas.</p>
+    <button class="btn-massive" onclick="window.location.href='./index.html'">LAUNCH APP</button>
+  </section>
+
+  <section class="features" id="features">
+    <h2 class="section-title reveal">Fitur <span class="neon-text">Unggulan</span></h2>
+    <div class="card-grid">
+      
+      <div class="glass-card reveal">
+        <div class="card-icon">⌛</div>
+        <h3 class="card-title">Dashboard Prediktif</h3>
+        <p class="card-desc">Pantau saldo, perbandingan pemasukan/pengeluaran harian & bulanan secara real-time. Dilengkapi Skor Kesehatan Keuangan berbasis algoritma yang menghitung rasio tabungan, utang, dan dana darurat Anda.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">Auto-Update</span>
+          <span class="tech-badge">Health Score</span>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <div class="card-icon">🔁</div>
+        <h3 class="card-title">Multi-Account & Mutasi</h3>
+        <p class="card-desc">Buat dompet virtual tanpa batas (Cash, Bank, E-Wallet, Crypto). Pindahkan saldo antar akun secara instan dengan validasi real-time agar saldo tidak pernah minus.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">Multi-Wallet</span>
+          <span class="tech-badge">Transfer Logic</span>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title">Smart Bills & Debt</h3>
+        <p class="card-desc">Tracking Hutang & Piutang dengan sistem jatuh tempo cerdas. Upload bukti transfer, bayar cicilan, dan dapatkan peringatan dini untuk tagihan yang mendekati jatuh tempo.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">Due Alert</span>
+          <span class="tech-badge">Receipt Upload</span>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <div class="card-icon">🧠</div>
+        <h3 class="card-title">Saran Keuangan AI</h3>
+        <p class="card-desc">Bukan sekadar pencatatan. Analisis cerdas membaca polana pengeluaranmu dan memberikan saran prioritas, seperti mengurangi pengeluaran kategori terbesar atau menagih piutang yang tertunda.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">Auto-Suggest</span>
+          <span class="tech-badge">Spending Insight</span>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <div class="card-icon">🛡️</div>
+        <h3 class="card-title">Zero-Server Privacy</h3>
+        <p class="card-desc">100% data tersimpan di perangkatmu (localStorage). Tidak ada database cloud, tidak ada API pihak ketiga. Kebebasan finansial berarti kebebasan data pribadi.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">Offline-First</span>
+          <span class="tech-badge">Local DB</span>
+        </div>
+      </div>
+
+      <div class="glass-card reveal">
+        <div class="card-icon">📱</div>
+        <h3 class="card-title">Native App Experience</h3>
+        <p class="card-desc">Install langsung dari browser (PWA). Tampilan responsive, multi-bahasa (ID/EN), dark mode elegan, dan berjalan sehalus aplikasi native di Android & iOS.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">PWA Ready</span>
+          <span class="tech-badge">i18n</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cta reveal">
+    <h2 class="section-title">Siap Mengontrol<br>Keuanganmu?</h2>
+    <br>
+    <button class="btn-massive" onclick="window.location.href='./index.html'">MASUK KE APLIKASI</button>
+  </section>
+
+  <footer class="footer">
+    &copy; 2024 owI-FinancialTrack. Built with 💚 & Code. Zero Server Policy.
+  </footer>
+
+  <script>
+    // Simple Scroll Reveal Animation
+    const reveals = document.querySelectorAll('.reveal');
+
+    const revealOnScroll = () => {
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const revealPoint = 100;
+
+        if (elementTop < windowHeight - revealPoint) {
+          el.classList.add('active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    // Trigger once on load
+    revealOnScroll();
+  </script>
+</body>
+</html>
