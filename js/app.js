@@ -1,3 +1,5 @@
+console.log("🔥🔥🔥 OWI APP.JS V2.0 STARTED 🔥🔥🔥");
+
 import { loadState, getState } from './db.js';
 import { applyI18n, setLang } from './i18n.js';
 import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
@@ -5,7 +7,8 @@ import { initDashboard } from './pages/dashboard.js';
 import { initMutation } from './pages/mutation.js';
 import { initTransaction } from './pages/transaction.js';
 import { initBills } from './pages/bills.js';
-import { initHistory } from './pages/history.js'; // <-- Tambahin ini
+import { initHistory } from './pages/history.js';
+import { initSidebar } from './pages/sidebar.js';
 
 /* ===== INITIALIZATION ===== */
 
@@ -21,7 +24,9 @@ applyI18n();
 updateGreeting();
 updateDashTime();
 
+// Init All Modules
 initDashboard();
+initSidebar(); // Inisialisasi listener sidebar, profil, COA
 
 /* ===== EVENT LISTENERS ===== */
 window.addEventListener('pageChange', (e) => {
@@ -39,7 +44,7 @@ window.addEventListener('pageChange', (e) => {
   if(page === 'tagihan') {
     import('./pages/bills.js').then(mod => mod.initBills());
   }
-  if(page === 'riwayat') { // <-- Tambah blok ini
+  if(page === 'riwayat') {
     import('./pages/history.js').then(mod => mod.initHistory());
   }
 });
@@ -49,7 +54,8 @@ window.addEventListener('langChange', () => {
   import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
   import('./pages/transaction.js').then(mod => mod.renderActHistory());
   import('./pages/bills.js').then(mod => mod.renderTagList());
-  import('./pages/history.js').then(mod => mod.renderHistory()); // <-- Tambah ini
+  import('./pages/history.js').then(mod => mod.renderHistory());
+  import('./pages/sidebar.js').then(mod => mod.renderCOA()); 
 });
 
 /* ===== SERVICE WORKER ===== */
