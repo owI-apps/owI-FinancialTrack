@@ -1,15 +1,15 @@
-const CACHE_NAME = 'owi-fintrack-v3';
+const CACHE_NAME = 'owi-fintrack-v4'; // Ganti versi cache biar browser refresh settingan lama
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/app.js',
-  '/js/db.js',
-  '/js/ui.js',
-  '/js/i18n.js',
-  '/js/utils.js',
-  '/assets/icons/icon-192x192.png', // Tambahin ini
-  '/assets/icons/logo-512.png'      // Tambahin ini
+  './',
+  './index.html',
+  './css/style.css',
+  './js/app.js',
+  './js/db.js',
+  './js/ui.js',
+  './js/i18n.js',
+  './js/utils.js',
+  './assets/icons/icon-192x192.png',
+  './assets/icons/logo-512.png'
 ];
 
 self.addEventListener('install', event => {
@@ -18,6 +18,9 @@ self.addEventListener('install', event => {
       .then(cache => {
         console.log('Caching core assets & icons');
         return cache.addAll(urlsToCache);
+      })
+      .catch(err => {
+        console.error('Failed to cache:', err);
       })
   );
 });
@@ -40,7 +43,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // Hapus cache versi lama
           }
         })
       );
