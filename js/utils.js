@@ -22,10 +22,12 @@ export function fmtRpInput(el) {
 }
 
 export function parseRpInput(el) {
+  if (!el) return 0;
   return parseInt(el.value.replace(/\D/g, '')) || 0;
 }
 
 export function autoFitText(el) {
+  if(!el) return;
   const style = getComputedStyle(el);
   const maxW = el.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   if (maxW <= 0) return;
@@ -45,7 +47,10 @@ export function initAutoFit() {
 }
 
 export function setupRpInputs(container = document) {
+  if (!container) return; // Critical fix biar gak crash kalau container null
   container.querySelectorAll('[data-fmt-rp]').forEach(el => {
+    if (el.dataset.fmtBound) return; // Cegah duplicate listener
+    el.dataset.fmtBound = 'true';
     el.addEventListener('input', () => fmtRpInput(el));
     el.addEventListener('focus', () => el.select());
     el.addEventListener('blur', () => { if (!el.value) el.value = ''; });
