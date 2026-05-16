@@ -2,50 +2,43 @@ import { loadState, getState } from './db.js';
 import { applyI18n, setLang } from './i18n.js';
 import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
 import { initDashboard } from './pages/dashboard.js';
+import { initMutation } from './pages/mutation.js'; // <-- Tambahin ini
 
 /* ===== INITIALIZATION ===== */
 
-// 1. Load State dari LocalStorage
 loadState();
 const state = getState();
 
-// 2. Init Core UI (Sidebar, Bottom Nav, Modals, Listeners)
 initCoreUI();
-
-// 3. Render awal icons (Lucide)
 lucide.createIcons();
 
-// 4. Apply State ke UI (Bahasa, Tema, Teks)
 setLang(state.lang || 'id');
 setTheme(state.theme || 'light');
 applyI18n();
 updateGreeting();
 updateDashTime();
 
-// 5. Init Halaman Dashboard
+// Init halaman yang aktif pertama kali (Dashboard)
 initDashboard();
 
 /* ===== EVENT LISTENERS ===== */
-
-// Listener ketika pindah halaman via Bottom Nav
 window.addEventListener('pageChange', (e) => {
   const page = e.detail.page;
   
   if(page === 'dashboard') {
-    import('./pages/dashboard.js').then(mod => {
-      mod.initDashboard(); // Refresh data & animasi ulang
-    });
+    import('./pages/dashboard.js').then(mod => mod.initDashboard());
   }
   
-  // Nanti halaman lain ditambah di sini
-  // if(page === 'mutasi') { ... }
+  if(page === 'mutasi') {
+    import('./pages/mutation.js').then(mod => {
+      mod.initMutation(); // Inisialisasi event listener & render riwayat
+    });
+  }
 });
 
-// Listener ketika ganti bahasa (biar data dinamis di dashboard ikut ke-translate)
 window.addEventListener('langChange', () => {
-  import('./pages/dashboard.js').then(mod => {
-    mod.initDashboard(); 
-  });
+  import('./pages/dashboard.js').then(mod => mod.initDashboard());
+  import('./pages/mutation.js').then(mod => mod.renderMutasiHistory()); // Update teks riwayat kalau ganti bahasa
 });
 
 /* ===== SERVICE WORKER ===== */
