@@ -1,5 +1,5 @@
 import { $, $$ } from './utils.js';
-import { getState, saveState, addLog } from './db.js';
+import { getState, saveState } from './db.js';
 import { t, applyI18n, getLang } from './i18n.js';
 
 let toastT = null;
@@ -77,11 +77,12 @@ export function initCoreUI() {
   $('#sbClose').addEventListener('click', closeSB);
   $('#sbOverlay').addEventListener('click', closeSB);
 
-  // SB Items
+  // SB Items (PENTING: Dispatch event biar sidebar.js tau halaman apa yang dibuka)
   $$('.sb-item[data-sb]').forEach(item => item.addEventListener('click', () => {
     const key = item.dataset.sb;
     showSBPage(key);
     lucide.createIcons();
+    window.dispatchEvent(new CustomEvent('sidebarPageChange', { detail: { page: key } }));
   }));
 
   // SB Back
@@ -90,7 +91,7 @@ export function initCoreUI() {
   // Escape key
   document.addEventListener('keydown', e => { if(e.key==='Escape') { closeSB(); closeAllModals(); } });
 
-  // Bottom Nav (Routing dasar)
+  // Bottom Nav
   $$('.ni[data-pg]').forEach(n => n.addEventListener('click', () => {
     $$('.ni').forEach(x => x.classList.remove('active'));
     n.classList.add('active');
@@ -98,8 +99,6 @@ export function initCoreUI() {
     const tgt = $(`#pg-${n.dataset.pg}`);
     if(tgt) { void tgt.offsetWidth; tgt.classList.add('active'); }
     window.scrollTo({top:0, behavior:'smooth'});
-    
-    // Dispatch event agar halaman bisa render ulang
     window.dispatchEvent(new CustomEvent('pageChange', { detail: { page: n.dataset.pg } }));
   }));
 
@@ -112,12 +111,11 @@ export function initCoreUI() {
   // Language Toggle
   $$('.lang-btn').forEach(b => b.addEventListener('click', () => {
     const lang = b.dataset.lang;
-    import('./db.js').then(db => { db.getState().lang = lang; db.saveState(); });
-    import('./i18n.js').then(i18n => { i18n.setLang(lang); i18n.applyI18n(); });
+    const state = getState(); state.lang = lang; saveState();
+    setLang(lang); applyI18n();
     $$('.lang-btn').forEach(x => x.classList.toggle('active', x.dataset.lang===lang));
     document.documentElement.lang = lang;
-    updateGreeting();
-    updateDashTime();
+    updateGreeting(); updateDashTime();
     window.dispatchEvent(new CustomEvent('langChange'));
   }));
 
@@ -126,8 +124,8 @@ export function initCoreUI() {
   $('#resetCancel').addEventListener('click', () => $('#resetModal').classList.remove('active'));
   $('#resetYes').addEventListener('click', () => { localStorage.removeItem('owi_fintrack_state'); closeSB(); setTimeout(()=>location.reload(),300); });
 
-  // Donate & Logout
-  const donateAction = () => { closeSB(); window.open('https://trakteer.id/shadowapps'); };
+  // Donate & Logout (UPDATE LINK TRAKTEER)
+  const donateAction = () => { closeSB(); window.open('https://trakteer.id/owi_apps/gift'); };
   $('#donateBtn').addEventListener('click', donateAction);
   $('#donateBtnSide').addEventListener('click', donateAction);
   $('#logoutBtn').addEventListener('click', () => { closeSB(); toast(t('logout_soon')); });
