@@ -57,6 +57,7 @@ export function renderTagList() {
     
     if(!allDebts.length && !allRecvs.length) {
       container.innerHTML = `<div class="tag-empty"><div class="tag-empty-t">${t('no_bills')}</div><div class="tag-empty-s">${t('no_bills_sub')}</div></div>`;
+      lucide.createIcons();
       return;
     }
     let html = '';
@@ -73,6 +74,7 @@ export function renderTagList() {
     const items = state.debts.filter(d => (d.totalDebt-d.paidAmount)>0);
     if(!items.length) {
       container.innerHTML = `<div class="tag-empty"><div class="tag-empty-t">${t('no_debts')}</div><div class="tag-empty-s">${t('no_debts_sub')}</div></div>`;
+      lucide.createIcons();
       return;
     }
     container.innerHTML = items.map(d => generateDebtCard(d)).join('');
@@ -80,6 +82,7 @@ export function renderTagList() {
     const items = state.receivables.filter(r => (r.amount-r.paidAmount)>0);
     if(!items.length) {
       container.innerHTML = `<div class="tag-empty"><div class="tag-empty-t">${t('no_recvs')}</div><div class="tag-empty-s">${t('no_recvs_sub')}</div></div>`;
+      lucide.createIcons();
       return;
     }
     container.innerHTML = items.map(r => generateRecvCard(r)).join('');
@@ -109,16 +112,13 @@ function generateRecvCard(r) {
 
 function bindTagCardEvents() {
   const state = getState();
-  // View Image
   $$('[data-rimg]').forEach(b => b.addEventListener('click', () => {
     const rv = state.receivables.find(x => x.id===b.dataset.rimg);
     if(rv && rv.receiptImage) { $('#tagImgView').src=rv.receiptImage; $('#tagImgModal').classList.add('active'); }
   }));
-  // Debt Buttons
   $$('[data-dfull]').forEach(b => b.addEventListener('click', () => handleDebtFull(b.dataset.dfull)));
   $$('[data-dmin]').forEach(b => b.addEventListener('click', () => handleDebtMin(b.dataset.dmin)));
   $$('[data-ddel]').forEach(b => b.addEventListener('click', () => handleDebtDel(b.dataset.ddel)));
-  // Recv Buttons
   $$('[data-rfull]').forEach(b => b.addEventListener('click', () => handleRecvFull(b.dataset.rfull)));
   $$('[data-rcicil]').forEach(b => b.addEventListener('click', () => handleRecvCicil(b.dataset.rcicil)));
   $$('[data-rdel]').forEach(b => b.addEventListener('click', () => handleRecvDel(b.dataset.rdel)));
@@ -150,7 +150,16 @@ function renderTagForm() {
       const desc=paid+'/'+tenor;
       state.debts.push({id:'d-'+Date.now(),name,description:desc,installmentAmount:inst,totalDebt:total,dueDate:due,paidAmount:0,createdAt:Date.now()});
       addLog('tagihan','Tambah hutang','"'+name+'" '+formatRp(total));
-      saveState(); renderTagActions(); renderTagForm(); toast(t('debt_added'));
+      saveState();
+      
+      // RESET KE TAMPILAN SEMUA SETELAH TAMBAH HUTANG
+      tagType = null; 
+      $('#tagDebtBtn').classList.remove('on-d');
+      $('#tagRecvBtn').classList.remove('on-r');
+      formContainer.innerHTML = '';
+      
+      renderTagActions();
+      toast(t('debt_added'));
     });
   } else {
     let pendingImg = null;
@@ -182,10 +191,19 @@ function renderTagForm() {
       if(!name){toast(t('name_required'));return} if(amount<=0){toast(t('invalid_amount'));return} if(!date){toast(t('name_required'));return}
       const srcAcc=state.accounts.find(a=>a.id===sourceId);
       if(!srcAcc||srcAcc.balance<amount){toast(t('mut_insufficient'));return}
-      srcAcc.balance-=amount; // Potong saldo saat piutang dicatat
+      srcAcc.balance-=amount;
       state.receivables.push({id:'r-'+Date.now(),name,borrowDate:date,amount,contact,sourceAccountId:sourceId,receiptImage:pendingImg||null,paidAmount:0,createdAt:Date.now()});
       addLog('tagihan','Tambah piutang','"'+name+'" '+formatRp(amount));
-      saveState(); renderTagActions(); renderTagForm(); toast(t('recv_added'));
+      saveState();
+      
+      // RESET KE TAMPILAN SEMUA SETELAH TAMBAH PIUTANG
+      tagType = null; 
+      $('#tagDebtBtn').classList.remove('on-d');
+      $('#tagRecvBtn').classList.remove('on-r');
+      formContainer.innerHTML = '';
+      
+      renderTagActions();
+      toast(t('recv_added'));
     });
   }
 }
@@ -288,8 +306,14 @@ function handleRecvDel(id) {
 
 /* ===== INIT ===== */
 export function initBills() {
+  // PENTING: Selalu reset filter ke SEMUA pas halaman dibuka
+  tagType = null; 
   const debtBtn = $('#tagDebtBtn');
   const recvBtn = $('#tagRecvBtn');
+  
+  if(debtBtn) debtBtn.classList.remove('on-d');
+  if(recvBtn) recvBtn.classList.remove('on-r');
+  $('#tagForm').innerHTML = '';
 
   if(debtBtn && !debtBtn.dataset.bound) {
     debtBtn.dataset.bound='true';
