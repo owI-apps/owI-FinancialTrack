@@ -1,76 +1,58 @@
-import { $, $$, initAutoFit, setupRpInputs } from './utils.js';
-import { loadState, getState, saveState, addLog } from './db.js';
-import { t, applyI18n, getLang, setLang } from './i18n.js';
-import { toast, updateGreeting, updateDashTime, initCoreUI, setTheme, openSB, closeSB, showSBPage, closeAllModals } from './ui.js';
+import { loadState, getState } from './db.js';
+import { applyI18n, setLang } from './i18n.js';
+import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
+import { initDashboard } from './pages/dashboard.js';
 
-// Init DB
+/* ===== INITIALIZATION ===== */
+
+// 1. Load State dari LocalStorage
 loadState();
 const state = getState();
 
-// Init UI
+// 2. Init Core UI (Sidebar, Bottom Nav, Modals, Listeners)
 initCoreUI();
+
+// 3. Render awal icons (Lucide)
 lucide.createIcons();
 
-// Sync State to UI
-currentLang = state.lang || 'id';
-setLang(currentLang);
+// 4. Apply State ke UI (Bahasa, Tema, Teks)
+setLang(state.lang || 'id');
 setTheme(state.theme || 'light');
 applyI18n();
 updateGreeting();
 updateDashTime();
 
- $('#dashUserName').textContent = state.userName;
-if(state.userPhoto) {
-  // render photo if exists
-}
+// 5. Init Halaman Dashboard
+initDashboard();
 
-// Dashboard Animate
-const dashCards = $$('#pg-dashboard .dc');
-function animateDashboard() {
-  dashCards.forEach(c => c.classList.remove('vis'));
-  dashCards.forEach(c => { const d = parseInt(c.dataset.delay)||0; setTimeout(()=>c.classList.add('vis'), 50+d); });
-  setTimeout(()=>{$$('.bar-f').forEach(b=>{b.style.width='0'; requestAnimationFrame(()=>requestAnimationFrame(()=>{b.style.width=b.dataset.w}))})}, 200);
-}
-animateDashboard();
+/* ===== EVENT LISTENERS ===== */
 
-// Temporary: render static wallets (akan dipindah ke pages/dashboard.js nanti)
-function renderDashboardWallets() {
-  const walletGrid = $('#walletGrid');
-  walletGrid.innerHTML = '';
-  const accTypeIcons = {'Cash':'wallet','Bank':'landmark','E-Wallet':'smartphone','Crypto':'bitcoin','Asuransi':'shield'};
-  state.accounts.forEach(acc => {
-    const icon = accTypeIcons[acc.type]||'wallet';
-    const card = document.createElement('div'); card.className = 'w-card';
-    card.innerHTML = `<div class="w-card-lbl"><i data-lucide="${icon}" style="width:13px;height:13px"></i>${acc.name}</div><div class="w-card-val auto-fit">${formatRp(acc.balance)}</div>`;
-    walletGrid.appendChild(card);
-  });
-  const addBtn = document.createElement('button'); addBtn.className = 'w-add';
-  addBtn.innerHTML = '<i data-lucide="plus"></i><span>'+t('add_wallet')+'</span>';
-  walletGrid.appendChild(addBtn);
-  lucide.createIcons();
-  requestAnimationFrame(initAutoFit);
-}
-
-function formatRp(n) {
-  const abs = Math.abs(n);
-  const sign = n < 0 ? '-' : '';
-  return sign + 'Rp ' + abs.toLocaleString('id-ID');
-}
-
-function getTotalBalance() { return state.accounts.reduce((s,a)=>s+(a.balance||0),0); }
-
- $('#dashTotalSaldo').textContent = formatRp(getTotalBalance());
-renderDashboardWallets();
-
-// Page Change Listener
+// Listener ketika pindah halaman via Bottom Nav
 window.addEventListener('pageChange', (e) => {
-  if(e.detail.page === 'dashboard') animateDashboard();
-  // nanti panggil module pages di sini
+  const page = e.detail.page;
+  
+  if(page === 'dashboard') {
+    import('./pages/dashboard.js').then(mod => {
+      mod.initDashboard(); // Refresh data & animasi ulang
+    });
+  }
+  
+  // Nanti halaman lain ditambah di sini
+  // if(page === 'mutasi') { ... }
 });
 
-// Service Worker
+// Listener ketika ganti bahasa (biar data dinamis di dashboard ikut ke-translate)
+window.addEventListener('langChange', () => {
+  import('./pages/dashboard.js').then(mod => {
+    mod.initDashboard(); 
+  });
+});
+
+/* ===== SERVICE WORKER ===== */
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW gagal:',e));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(r => console.log('SW terdaftar:', r.scope))
+      .catch(e => console.log('SW gagal:', e));
   });
 }
