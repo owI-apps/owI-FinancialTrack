@@ -1,6 +1,6 @@
 <div align="center">
 
-![owI-FinancialTrack Logo](assets/icons/logo-512.png)
+![owI-FinancialTrack Logo](assets/icons/icon-192x192.png)
 
 # owI-FinancialTrack
 
