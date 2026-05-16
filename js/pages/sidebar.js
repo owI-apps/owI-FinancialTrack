@@ -6,7 +6,7 @@ import { updateDashboardSaldo, renderDashboardWallets, updateDashBadges, updateF
 
 const accTypeIcons = {'Cash':'wallet','Bank':'landmark','E-Wallet':'smartphone','Crypto':'bitcoin','Asuransi':'shield'};
 let editingAccountId = null;
-let pendingAcc = null; // Penampung data akun baru yang mau ditambahkan
+let pendingAcc = null; 
 
 /* ===== IMAGE COMPRESSOR ===== */
 function compressImg(file, mw=400, q=.6) {
@@ -27,10 +27,15 @@ function compressImg(file, mw=400, q=.6) {
 
 /* ===== PROFILE ===== */
 function populateProfileForm() {
+  console.log("Membuka halaman Profile...");
   const state = getState();
-  $('#profileName').value = state.userName;
-  $('#profileEmail').value = state.userEmail;
-  $('#profilePhone').value = state.userPhone;
+  const nameInput = $('#profileName');
+  if (!nameInput) { console.error("Input #profileName tidak ditemukan di HTML!"); return; }
+  
+  nameInput.value = state.userName;
+  if($('#profileEmail')) $('#profileEmail').value = state.userEmail;
+  if($('#profilePhone')) $('#profilePhone').value = state.userPhone;
+  
   updateProfilePhotoPreview();
   updateAboutLogo();
 }
@@ -39,6 +44,8 @@ function updateProfilePhotoPreview() {
   const state = getState();
   const img = $('#profilePhotoImg');
   const icon = $('#profilePhotoIcon');
+  if(!img || !icon) return;
+
   if(state.userPhoto) { img.src = state.userPhoto; img.style.display = 'block'; icon.style.display = 'none'; }
   else { img.style.display = 'none'; icon.style.display = ''; }
 }
@@ -47,6 +54,7 @@ function updateLogoWithPhoto() {
   const state = getState();
   const headerBtn = $('#logoBtn');
   const sbLogo = $('#sbLogo');
+  if(!headerBtn || !sbLogo) return;
 
   if(state.userPhoto) {
     headerBtn.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
@@ -73,9 +81,10 @@ function updateAboutLogo() {
 
 /* ===== CHART OF ACCOUNT ===== */
 export function renderCOA() {
+  console.log("Merender Chart of Account...");
   const state = getState();
   const list = $('#coaList');
-  if(!list) return;
+  if(!list) { console.error("Container #coaList tidak ditemukan!"); return; }
 
   list.innerHTML = '';
   state.accounts.forEach(acc => {
@@ -93,7 +102,8 @@ export function renderCOA() {
       </div>`;
     list.appendChild(card);
   });
-  lucide.createIcons();
+  
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 
   list.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => {
     const a = state.accounts.find(x => x.id === btn.dataset.edit);
@@ -114,31 +124,31 @@ export function renderCOA() {
 
 function openEditDompet(acc) {
   editingAccountId = null;
+  const modal = $('#editDompetModal');
+  if(!modal) return;
   $('#editDompetBalance').value = acc.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   $('#editModalTitle').textContent = t('edit_main_wallet');
-  $('#editDompetModal').classList.add('active');
-  setupRpInputs($('#editDompetModal'));
+  modal.classList.add('active');
+  setupRpInputs(modal);
 }
 
 function openEditAccount(acc) {
   editingAccountId = acc.id;
+  const modal = $('#editDompetModal');
+  if(!modal) return;
   $('#editDompetBalance').value = acc.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   $('#editModalTitle').textContent = 'Edit ' + acc.name;
-  $('#editDompetModal').classList.add('active');
-  setupRpInputs($('#editDompetModal'));
-}
-
-/* ===== SETTING UI SYNC ===== */
-function syncSettingUI() {
-  const state = getState();
-  $('#themeToggle').classList.toggle('on', state.theme==='dark');
-  $$('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang===state.lang));
+  modal.classList.add('active');
+  setupRpInputs(modal);
 }
 
 /* ===== INIT SIDEBAR ===== */
 export function initSidebar() {
+  console.log("Inisialisasi Module Sidebar...");
   const state = getState();
-  $('#dashUserName').textContent = state.userName;
+  const dashName = $('#dashUserName');
+  if(dashName) dashName.textContent = state.userName;
+  
   updateLogoWithPhoto();
 
   // 1. Listen ketika halaman sidebar dibuka
@@ -146,7 +156,6 @@ export function initSidebar() {
     const page = e.detail.page;
     if(page === 'profile') populateProfileForm();
     if(page === 'coa') renderCOA();
-    if(page === 'setting') syncSettingUI();
     if(page === 'about') updateAboutLogo();
   });
 
@@ -155,7 +164,7 @@ export function initSidebar() {
   const photoInput = $('#photoInput');
   if(photoBtn && !photoBtn.dataset.bound) {
     photoBtn.dataset.bound = 'true';
-    photoBtn.addEventListener('click', () => photoInput.click());
+    photoBtn.addEventListener('click', () => { if(photoInput) photoInput.click(); });
   }
   if(photoInput && !photoInput.dataset.bound) {
     photoInput.dataset.bound = 'true';
@@ -180,15 +189,20 @@ export function initSidebar() {
   if(saveProfileBtn && !saveProfileBtn.dataset.bound) {
     saveProfileBtn.dataset.bound = 'true';
     saveProfileBtn.addEventListener('click', () => {
-      const name = $('#profileName').value.trim();
-      if(!name) { toast(t('name_empty')); $('#profileName').focus(); return; }
+      const nameInput = $('#profileName');
+      if(!nameInput) return;
+      const name = nameInput.value.trim();
+      if(!name) { toast(t('name_empty')); nameInput.focus(); return; }
+      
       const state = getState();
       state.userName = name;
-      state.userEmail = $('#profileEmail').value.trim();
-      state.userPhone = $('#profilePhone').value.trim();
+      if($('#profileEmail')) state.userEmail = $('#profileEmail').value.trim();
+      if($('#profilePhone')) state.userPhone = $('#profilePhone').value.trim();
       addLog('profile', 'Profile diperbarui', 'Nama: '+name);
       saveState();
-      $('#dashUserName').textContent = name; // Update Dashboard
+      
+      const dashName = $('#dashUserName');
+      if(dashName) dashName.textContent = name;
       toast(t('profile_saved'));
     });
   }
@@ -198,9 +212,13 @@ export function initSidebar() {
   if(coaAddBtn && !coaAddBtn.dataset.bound) {
     coaAddBtn.dataset.bound = 'true';
     coaAddBtn.addEventListener('click', () => {
-      $('#newAccName').value = ''; $('#newAccType').value = ''; $('#newAccBalance').value = '';
-      $('#addAccountModal').classList.add('active');
-      setupRpInputs($('#addAccountModal'));
+      const modal = $('#addAccountModal');
+      if(!modal) return;
+      if($('#newAccName')) $('#newAccName').value = ''; 
+      if($('#newAccType')) $('#newAccType').value = ''; 
+      if($('#newAccBalance')) $('#newAccBalance').value = '';
+      modal.classList.add('active');
+      setupRpInputs(modal);
     });
   }
 
@@ -209,21 +227,31 @@ export function initSidebar() {
   const addAccPost = $('#addAccPost');
   if(addAccCancel && !addAccCancel.dataset.bound) {
     addAccCancel.dataset.bound = 'true';
-    addAccCancel.addEventListener('click', () => $('#addAccountModal').classList.remove('active'));
+    addAccCancel.addEventListener('click', () => { 
+      const modal = $('#addAccountModal'); 
+      if(modal) modal.classList.remove('active'); 
+    });
   }
   if(addAccPost && !addAccPost.dataset.bound) {
     addAccPost.dataset.bound = 'true';
     addAccPost.addEventListener('click', () => {
-      const name = $('#newAccName').value.trim();
-      const type = $('#newAccType').value;
-      const balance = parseRpInput($('#newAccBalance'));
+      const nameEl = $('#newAccName');
+      const typeEl = $('#newAccType');
+      const balanceEl = $('#newAccBalance');
+      if(!nameEl || !typeEl || !balanceEl) return;
+
+      const name = nameEl.value.trim();
+      const type = typeEl.value;
+      const balance = parseRpInput(balanceEl);
       if(!name) { toast(t('name_required')); return; }
       if(!type) { toast(t('type_required')); return; }
       if(balance < 0) { toast(t('no_negative')); return; }
       
       pendingAcc = {name, type, balance};
-      $('#addAccountModal').classList.remove('active');
-      $('#confirmModal').classList.add('active');
+      const addModal = $('#addAccountModal');
+      const confirmModal = $('#confirmModal');
+      if(addModal) addModal.classList.remove('active');
+      if(confirmModal) confirmModal.classList.add('active');
     });
   }
 
@@ -233,8 +261,10 @@ export function initSidebar() {
   if(confirmEdit && !confirmEdit.dataset.bound) {
     confirmEdit.dataset.bound = 'true';
     confirmEdit.addEventListener('click', () => {
-      $('#confirmModal').classList.remove('active');
-      setTimeout(() => $('#addAccountModal').classList.add('active'), 200);
+      const confirmModal = $('#confirmModal');
+      const addModal = $('#addAccountModal');
+      if(confirmModal) confirmModal.classList.remove('active');
+      setTimeout(() => { if(addModal) addModal.classList.add('active'); }, 200);
     });
   }
   if(confirmYes && !confirmYes.dataset.bound) {
@@ -247,7 +277,8 @@ export function initSidebar() {
       saveState();
       renderCOA(); renderDashboardWallets(); updateDashboardSaldo();
       toast(`"${pendingAcc.name}" ${t('account_added')}`);
-      $('#confirmModal').classList.remove('active');
+      const confirmModal = $('#confirmModal');
+      if(confirmModal) confirmModal.classList.remove('active');
       pendingAcc = null;
     });
   }
@@ -257,12 +288,18 @@ export function initSidebar() {
   const editDompetSave = $('#editDompetSave');
   if(editDompetCancel && !editDompetCancel.dataset.bound) {
     editDompetCancel.dataset.bound = 'true';
-    editDompetCancel.addEventListener('click', () => { $('#editDompetModal').classList.remove('active'); editingAccountId=null; });
+    editDompetCancel.addEventListener('click', () => { 
+      const modal = $('#editDompetModal');
+      if(modal) modal.classList.remove('active'); 
+      editingAccountId=null; 
+    });
   }
   if(editDompetSave && !editDompetSave.dataset.bound) {
     editDompetSave.dataset.bound = 'true';
     editDompetSave.addEventListener('click', () => {
-      const val = parseRpInput($('#editDompetBalance'));
+      const balanceEl = $('#editDompetBalance');
+      if(!balanceEl) return;
+      const val = parseRpInput(balanceEl);
       if(isNaN(val) || val < 0) { toast(t('invalid_amount')); return; }
       const state = getState();
       if(editingAccountId) {
@@ -276,7 +313,8 @@ export function initSidebar() {
       renderCOA(); renderDashboardWallets(); updateDashboardSaldo(); updateFinancialHealth(); renderDynamicSaran();
       toast(t('main_wallet_updated'));
       editingAccountId = null;
-      $('#editDompetModal').classList.remove('active');
+      const modal = $('#editDompetModal');
+      if(modal) modal.classList.remove('active');
     });
   }
 
