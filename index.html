@@ -1,31 +1,18 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#85a633">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="owI-FinTrack">
-  <meta name="application-name" content="owI-FinancialTrack">
-  <meta name="description" content="Aplikasi pencatatan keuangan pribadi owI-FinancialTrack">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <!-- Manifest & Icons PWA -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="assets/icons/logo-512.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/logo-512.png">
-
-  <!-- Fonts & Lucide -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  
-  <title>owI-FinancialTrack</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
+  <header class="header" id="header">
+    <!-- GANTI INI: Permanen pakai icon PNG -->
+    <button class="logo-btn" id="logoBtn" aria-label="Buka menu sidebar">
+      <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+    </button>
+    <div class="hdr-tg">
+      <div class="hdr-title">owI-FinancialTrack</div>
+      <div class="hdr-sub" data-i18n="financial_tracker">financial tracker</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="install-btn" id="installBtn" aria-label="Install aplikasi"><i data-lucide="download"></i><span data-i18n="install">Install</span></button>
+    </div>
+  </header>
 <body>
 
   <header class="header" id="header">
@@ -47,7 +34,9 @@
   <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menu utama">
     <div class="sb-hdr">
       <div class="sb-brand">
-        <div class="sb-logo" id="sbLogo"><span class="logo-ar">owI</span></div>
+        <div class="sb-logo" id="sbLogo">
+          <img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+        </div>
         <span class="sb-name">owI-FinTrack</span>
       </div>
       <button class="sb-close" id="sbClose" aria-label="Tutup menu"><i data-lucide="x"></i></button>
