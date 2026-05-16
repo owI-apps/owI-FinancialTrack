@@ -1,22 +1,17 @@
 {
-  "name": "Shadow — Financial Tracker",
-  "short_name": "Shadow",
-  "description": "Aplikasi pencatatan keuangan pribadi yang simpel dan pribadi",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "owI-FinancialTrack",
+  "short_name": "owI-Fin",
+  "description": "Aplikasi pencatatan keuangan pribadi owI-FinancialTrack",
+  "start_url": "/index.html",
   "display": "standalone",
+  "background_color": "#85a633",
+  "theme_color": "#85a633",
   "orientation": "portrait",
-  "background_color": "#FFFFFF",
-  "theme_color": "#0D9488",
-  "lang": "id",
-  "categories": ["finance", "productivity"],
   "icons": [
     {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='36' fill='%2385a633'/><text x='90' y='125' font-size='100' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>owI</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
     }
-  ],
-  "screenshots": []
+  ]
 }
