@@ -1,6 +1,6 @@
 import { $, $$ } from './utils.js';
 import { getState, saveState } from './db.js';
-import { t, applyI18n, getLang } from './i18n.js';
+import { t, applyI18n, getLang, setLang } from './i18n.js'; // <-- FIX: setLang ditambahin di sini
 
 let toastT = null;
 
@@ -65,7 +65,7 @@ export function setTheme(theme) {
   saveState();
   document.documentElement.setAttribute('data-theme', theme);
   $('#themeToggle').classList.toggle('on', theme==='dark');
-  document.querySelector('meta[name="theme-color"]').content = theme==='dark' ? '#1a210f' : '#85a633';
+  document.querySelector('meta[name="theme-color"]').content = theme==='dark' ? '#0f1608' : '#2c3a0e'; // Update warna meta tag biar headbar sesuai tema
 }
 
 export function initCoreUI() {
@@ -77,7 +77,7 @@ export function initCoreUI() {
   $('#sbClose').addEventListener('click', closeSB);
   $('#sbOverlay').addEventListener('click', closeSB);
 
-  // SB Items (PENTING: Dispatch event biar sidebar.js tau halaman apa yang dibuka)
+  // SB Items
   $$('.sb-item[data-sb]').forEach(item => item.addEventListener('click', () => {
     const key = item.dataset.sb;
     showSBPage(key);
@@ -108,15 +108,15 @@ export function initCoreUI() {
   // Theme Toggle
   $('#themeToggle').addEventListener('click', () => setTheme(getState().theme==='dark'?'light':'dark'));
 
-  // Language Toggle
+  // Language Toggle (FIX ADA DI SINI)
   $$('.lang-btn').forEach(b => b.addEventListener('click', () => {
     const lang = b.dataset.lang;
     const state = getState(); state.lang = lang; saveState();
-    setLang(lang); applyI18n();
+    setLang(lang); applyI18n(); // Sekarang setLang udah ke-import
     $$('.lang-btn').forEach(x => x.classList.toggle('active', x.dataset.lang===lang));
     document.documentElement.lang = lang;
     updateGreeting(); updateDashTime();
-    window.dispatchEvent(new CustomEvent('langChange'));
+    window.dispatchEvent(new CustomEvent('langChange')); // Kirim sinyal ke app.js buat update dashboard
   }));
 
   // Reset
@@ -124,7 +124,7 @@ export function initCoreUI() {
   $('#resetCancel').addEventListener('click', () => $('#resetModal').classList.remove('active'));
   $('#resetYes').addEventListener('click', () => { localStorage.removeItem('owi_fintrack_state'); closeSB(); setTimeout(()=>location.reload(),300); });
 
-  // Donate & Logout (UPDATE LINK TRAKTEER)
+  // Donate & Logout
   const donateAction = () => { closeSB(); window.open('https://trakteer.id/owi_apps/gift'); };
   $('#donateBtn').addEventListener('click', donateAction);
   $('#donateBtnSide').addEventListener('click', donateAction);
