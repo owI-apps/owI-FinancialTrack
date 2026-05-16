@@ -127,7 +127,6 @@ export function initCoreUI() {
   // Donate & Logout
   const donateAction = () => { closeSB(); window.open('https://trakteer.id/owi_apps/gift'); };
   $('#donateBtn').addEventListener('click', donateAction);
-  $('#donateBtnSide').addEventListener('click', donateAction);
   $('#logoutBtn').addEventListener('click', () => { closeSB(); toast(t('logout_soon')); });
 
   // PWA Install
