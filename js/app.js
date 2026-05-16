@@ -2,7 +2,8 @@ import { loadState, getState } from './db.js';
 import { applyI18n, setLang } from './i18n.js';
 import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
 import { initDashboard } from './pages/dashboard.js';
-import { initMutation } from './pages/mutation.js'; // <-- Tambahin ini
+import { initMutation } from './pages/mutation.js';
+import { initTransaction } from './pages/transaction.js'; // <-- Tambahin ini
 
 /* ===== INITIALIZATION ===== */
 
@@ -18,7 +19,6 @@ applyI18n();
 updateGreeting();
 updateDashTime();
 
-// Init halaman yang aktif pertama kali (Dashboard)
 initDashboard();
 
 /* ===== EVENT LISTENERS ===== */
@@ -30,15 +30,21 @@ window.addEventListener('pageChange', (e) => {
   }
   
   if(page === 'mutasi') {
-    import('./pages/mutation.js').then(mod => {
-      mod.initMutation(); // Inisialisasi event listener & render riwayat
-    });
+    import('./pages/mutation.js').then(mod => mod.initMutation());
+  }
+  
+  if(page === 'tambah') { // <-- Tambah blok ini
+    import('./pages/transaction.js').then(mod => mod.initTransaction());
   }
 });
 
 window.addEventListener('langChange', () => {
   import('./pages/dashboard.js').then(mod => mod.initDashboard());
-  import('./pages/mutation.js').then(mod => mod.renderMutasiHistory()); // Update teks riwayat kalau ganti bahasa
+  import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
+  import('./pages/transaction.js').then(mod => { // <-- Tambah blok ini
+    mod.renderActHistory();
+    if($('#actForm').innerHTML !== '') mod.renderActForm(); // Re-render form kalau lagi terbuka
+  });
 });
 
 /* ===== SERVICE WORKER ===== */
