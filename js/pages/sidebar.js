@@ -6,6 +6,7 @@ import { updateDashboardSaldo, renderDashboardWallets, updateDashBadges, updateF
 
 const accTypeIcons = {'Cash':'wallet','Bank':'landmark','E-Wallet':'smartphone','Crypto':'bitcoin','Asuransi':'shield'};
 let editingAccountId = null;
+let pendingAcc = null; // Penampung data akun baru yang mau ditambahkan
 
 /* ===== IMAGE COMPRESSOR ===== */
 function compressImg(file, mw=400, q=.6) {
@@ -49,24 +50,11 @@ function updateLogoWithPhoto() {
 
   if(state.userPhoto) {
     headerBtn.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
-    // Hapus text owI di sidebar logo, ganti img
-    const sbOldImg = sbLogo.querySelector('.sb-user-photo');
-    if(sbOldImg) sbOldImg.remove();
-    const sbOldAr = sbLogo.querySelector('.logo-ar');
-    if(sbOldAr) sbOldAr.style.display = 'none';
-    
-    const newImg = document.createElement('img');
-    newImg.className = 'sb-user-photo';
-    newImg.src = state.userPhoto;
-    newImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0';
+    sbLogo.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0">`;
     sbLogo.style.position = 'relative';
-    sbLogo.appendChild(newImg);
   } else {
     headerBtn.innerHTML = `<span class="logo-ar">owI</span>`;
-    const sbOldImg = sbLogo.querySelector('.sb-user-photo');
-    if(sbOldImg) sbOldImg.remove();
-    const sbOldAr = sbLogo.querySelector('.logo-ar');
-    if(sbOldAr) sbOldAr.style.display = '';
+    sbLogo.innerHTML = `<span class="logo-ar">owI</span>`;
   }
 }
 
@@ -74,18 +62,12 @@ function updateAboutLogo() {
   const state = getState();
   const el = $('#aboutLogo');
   if(!el) return;
-  const ar = el.querySelector('.logo-ar');
-  let img = el.querySelector('img');
 
   if(state.userPhoto) {
-    if(!img) { img = document.createElement('img'); el.appendChild(img); }
-    img.src = state.userPhoto;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0';
+    el.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0">`;
     el.style.position = 'relative';
-    if(ar) ar.style.display = 'none';
   } else {
-    if(img) img.remove();
-    if(ar) ar.style.display = '';
+    el.innerHTML = `<span class="logo-ar">owI</span>`;
   }
 }
 
@@ -135,6 +117,7 @@ function openEditDompet(acc) {
   $('#editDompetBalance').value = acc.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   $('#editModalTitle').textContent = t('edit_main_wallet');
   $('#editDompetModal').classList.add('active');
+  setupRpInputs($('#editDompetModal'));
 }
 
 function openEditAccount(acc) {
@@ -142,17 +125,32 @@ function openEditAccount(acc) {
   $('#editDompetBalance').value = acc.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   $('#editModalTitle').textContent = 'Edit ' + acc.name;
   $('#editDompetModal').classList.add('active');
+  setupRpInputs($('#editDompetModal'));
+}
+
+/* ===== SETTING UI SYNC ===== */
+function syncSettingUI() {
+  const state = getState();
+  $('#themeToggle').classList.toggle('on', state.theme==='dark');
+  $$('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang===state.lang));
 }
 
 /* ===== INIT SIDEBAR ===== */
 export function initSidebar() {
   const state = getState();
-  
-  // Sync Profile UI
   $('#dashUserName').textContent = state.userName;
   updateLogoWithPhoto();
 
-  // 1. Profile Photo
+  // 1. Listen ketika halaman sidebar dibuka
+  window.addEventListener('sidebarPageChange', (e) => {
+    const page = e.detail.page;
+    if(page === 'profile') populateProfileForm();
+    if(page === 'coa') renderCOA();
+    if(page === 'setting') syncSettingUI();
+    if(page === 'about') updateAboutLogo();
+  });
+
+  // 2. Profile Photo
   const photoBtn = $('#profilePhotoBtn');
   const photoInput = $('#photoInput');
   if(photoBtn && !photoBtn.dataset.bound) {
@@ -177,7 +175,7 @@ export function initSidebar() {
     });
   }
 
-  // 2. Save Profile
+  // 3. Save Profile
   const saveProfileBtn = $('#profileSaveBtn');
   if(saveProfileBtn && !saveProfileBtn.dataset.bound) {
     saveProfileBtn.dataset.bound = 'true';
@@ -190,12 +188,12 @@ export function initSidebar() {
       state.userPhone = $('#profilePhone').value.trim();
       addLog('profile', 'Profile diperbarui', 'Nama: '+name);
       saveState();
-      $('#dashUserName').textContent = name;
+      $('#dashUserName').textContent = name; // Update Dashboard
       toast(t('profile_saved'));
     });
   }
 
-  // 3. COA Add Button
+  // 4. COA Add Button
   const coaAddBtn = $('#coaAddBtn');
   if(coaAddBtn && !coaAddBtn.dataset.bound) {
     coaAddBtn.dataset.bound = 'true';
@@ -206,7 +204,7 @@ export function initSidebar() {
     });
   }
 
-  // 4. COA Add Account Modal
+  // 5. COA Add Account Modal
   const addAccCancel = $('#addAccCancel');
   const addAccPost = $('#addAccPost');
   if(addAccCancel && !addAccCancel.dataset.bound) {
@@ -222,13 +220,14 @@ export function initSidebar() {
       if(!name) { toast(t('name_required')); return; }
       if(!type) { toast(t('type_required')); return; }
       if(balance < 0) { toast(t('no_negative')); return; }
-      $('#addAccountModal')._pending = {name, type, balance};
+      
+      pendingAcc = {name, type, balance};
       $('#addAccountModal').classList.remove('active');
       $('#confirmModal').classList.add('active');
     });
   }
 
-  // 5. Confirm Add Account
+  // 6. Confirm Add Account
   const confirmEdit = $('#confirmEdit');
   const confirmYes = $('#confirmYes');
   if(confirmEdit && !confirmEdit.dataset.bound) {
@@ -241,20 +240,19 @@ export function initSidebar() {
   if(confirmYes && !confirmYes.dataset.bound) {
     confirmYes.dataset.bound = 'true';
     confirmYes.addEventListener('click', () => {
-      const data = $('#addAccountModal')._pending;
-      if(!data) return;
+      if(!pendingAcc) return;
       const state = getState();
-      state.accounts.push({id:'acc-'+Date.now(), name:data.name, type:data.type, balance:data.balance, permanent:false});
-      addLog('coa', 'Akun ditambahkan', '"'+data.name+'" ('+data.type+')');
+      state.accounts.push({id:'acc-'+Date.now(), name:pendingAcc.name, type:pendingAcc.type, balance:pendingAcc.balance, permanent:false});
+      addLog('coa', 'Akun ditambahkan', '"'+pendingAcc.name+'" ('+pendingAcc.type+')');
       saveState();
       renderCOA(); renderDashboardWallets(); updateDashboardSaldo();
-      toast(`"${data.name}" ${t('account_added')}`);
+      toast(`"${pendingAcc.name}" ${t('account_added')}`);
       $('#confirmModal').classList.remove('active');
-      $('#addAccountModal')._pending = null;
+      pendingAcc = null;
     });
   }
 
-  // 6. Edit Saldo Modal
+  // 7. Edit Saldo Modal
   const editDompetCancel = $('#editDompetCancel');
   const editDompetSave = $('#editDompetSave');
   if(editDompetCancel && !editDompetCancel.dataset.bound) {
@@ -282,7 +280,7 @@ export function initSidebar() {
     });
   }
 
-  // 7. Reset App
+  // 8. Reset App
   const resetYes = $('#resetYes');
   if(resetYes && !resetYes.dataset.bound) {
     resetYes.dataset.bound = 'true';
