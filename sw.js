@@ -7,13 +7,18 @@ const urlsToCache = [
   '/js/db.js',
   '/js/ui.js',
   '/js/i18n.js',
-  '/js/utils.js'
+  '/js/utils.js',
+  '/assets/icons/icon-192x192.png', // Tambahin ini
+  '/assets/icons/logo-512.png'      // Tambahin ini
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('Caching core assets & icons');
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
