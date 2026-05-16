@@ -1,4 +1,4 @@
-const CACHE_NAME = 'owi-fintrack-v2';
+const CACHE_NAME = 'owi-fintrack-v3';
 const urlsToCache = [
   '/',
   '/index.html',
