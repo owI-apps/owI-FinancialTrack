@@ -1,4 +1,4 @@
-const CACHE_NAME = 'owi-fintrack-v4'; // Ganti versi cache biar browser refresh settingan lama
+const CACHE_NAME = 'owi-fintrack-v4'; // GANTI VERSI JADI v4
 const urlsToCache = [
   './',
   './index.html',
@@ -16,23 +16,17 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching core assets & icons');
+        console.log('Caching core assets v4');
         return cache.addAll(urlsToCache);
       })
-      .catch(err => {
-        console.error('Failed to cache:', err);
-      })
+      .catch(err => console.error('Failed to cache:', err))
   );
+  self.skipWaiting(); // Paksa SW baru langsung aktif
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) return response;
-        return fetch(event.request);
-      }
-    )
+    fetch(event.request).catch(() => caches.match(event.request)) // Network first, fallback cache
   );
 });
 
@@ -43,10 +37,11 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName); // Hapus cache versi lama
+            return caches.delete(cacheName); // Hapus cache v1, v2, v3
           }
         })
       );
     })
   );
+  self.clients.claim(); // Ambil alih halaman langsung
 });
