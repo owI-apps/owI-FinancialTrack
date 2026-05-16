@@ -1,4 +1,4 @@
-const CACHE_NAME = 'owi-fintrack-v4'; // GANTI VERSI JADI v4
+const CACHE_NAME = 'owi-fintrack-v5'; // GANTI VERSI JADI v5
 const urlsToCache = [
   './',
   './index.html',
