@@ -3,7 +3,8 @@ import { applyI18n, setLang } from './i18n.js';
 import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
 import { initDashboard } from './pages/dashboard.js';
 import { initMutation } from './pages/mutation.js';
-import { initTransaction } from './pages/transaction.js'; // <-- Tambahin ini
+import { initTransaction } from './pages/transaction.js';
+import { initBills } from './pages/bills.js';
 
 /* ===== INITIALIZATION ===== */
 
@@ -28,23 +29,22 @@ window.addEventListener('pageChange', (e) => {
   if(page === 'dashboard') {
     import('./pages/dashboard.js').then(mod => mod.initDashboard());
   }
-  
   if(page === 'mutasi') {
     import('./pages/mutation.js').then(mod => mod.initMutation());
   }
-  
-  if(page === 'tambah') { // <-- Tambah blok ini
+  if(page === 'tambah') {
     import('./pages/transaction.js').then(mod => mod.initTransaction());
+  }
+  if(page === 'tagihan') {
+    import('./pages/bills.js').then(mod => mod.initBills());
   }
 });
 
 window.addEventListener('langChange', () => {
   import('./pages/dashboard.js').then(mod => mod.initDashboard());
   import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
-  import('./pages/transaction.js').then(mod => { // <-- Tambah blok ini
-    mod.renderActHistory();
-    if($('#actForm').innerHTML !== '') mod.renderActForm(); // Re-render form kalau lagi terbuka
-  });
+  import('./pages/transaction.js').then(mod => mod.renderActHistory());
+  import('./pages/bills.js').then(mod => mod.renderTagList());
 });
 
 /* ===== SERVICE WORKER ===== */
