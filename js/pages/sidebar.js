@@ -56,13 +56,16 @@ function updateLogoWithPhoto() {
   const sbLogo = $('#sbLogo');
   if(!headerBtn || !sbLogo) return;
 
+  // 1. HEADER: Permanen pakai icon PNG (tidak ikut ganti foto)
+  headerBtn.innerHTML = `<img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+
+  // 2. SIDEBAR LOGO: Berubah kalau user upload foto
   if(state.userPhoto) {
-    headerBtn.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
     sbLogo.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0">`;
     sbLogo.style.position = 'relative';
   } else {
-    headerBtn.innerHTML = `<span class="logo-ar">owI</span>`;
-    sbLogo.innerHTML = `<span class="logo-ar">owI</span>`;
+    sbLogo.innerHTML = `<img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    sbLogo.style.position = '';
   }
 }
 
@@ -71,11 +74,13 @@ function updateAboutLogo() {
   const el = $('#aboutLogo');
   if(!el) return;
 
+  // ABOUT LOGO: Berubah kalau user upload foto
   if(state.userPhoto) {
     el.innerHTML = `<img src="${state.userPhoto}" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0">`;
     el.style.position = 'relative';
   } else {
-    el.innerHTML = `<span class="logo-ar">owI</span>`;
+    el.innerHTML = `<img src="./assets/icons/icon-192x192.png" alt="owI" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    el.style.position = '';
   }
 }
 
