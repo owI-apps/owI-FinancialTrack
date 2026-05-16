@@ -1,14 +1,15 @@
 console.log("🔥🔥🔥 OWI APP.JS V2.0 STARTED 🔥🔥🔥");
 
-import { loadState, getState } from './db.js';
-import { applyI18n, setLang } from './i18n.js';
-import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
-import { initDashboard } from './pages/dashboard.js';
-import { initMutation } from './pages/mutation.js';
-import { initTransaction } from './pages/transaction.js';
-import { initBills } from './pages/bills.js';
-import { initHistory } from './pages/history.js';
-import { initSidebar } from './pages/sidebar.js';
+// Tambahin ?v=3 di semua import biar GitHub CDN dipaksa ngasih file terbaru!
+import { loadState, getState } from './db.js?v=3';
+import { applyI18n, setLang } from './i18n.js?v=3';
+import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js?v=3';
+import { initDashboard } from './pages/dashboard.js?v=3';
+import { initMutation } from './pages/mutation.js?v=3';
+import { initTransaction } from './pages/transaction.js?v=3';
+import { initBills } from './pages/bills.js?v=3';
+import { initHistory } from './pages/history.js?v=3';
+import { initSidebar } from './pages/sidebar.js?v=3';
 
 /* ===== INITIALIZATION ===== */
 
@@ -26,36 +27,36 @@ updateDashTime();
 
 // Init All Modules
 initDashboard();
-initSidebar(); // Inisialisasi listener sidebar, profil, COA
+initSidebar();
 
 /* ===== EVENT LISTENERS ===== */
 window.addEventListener('pageChange', (e) => {
   const page = e.detail.page;
   
   if(page === 'dashboard') {
-    import('./pages/dashboard.js').then(mod => mod.initDashboard());
+    import('./pages/dashboard.js?v=3').then(mod => mod.initDashboard());
   }
   if(page === 'mutasi') {
-    import('./pages/mutation.js').then(mod => mod.initMutation());
+    import('./pages/mutation.js?v=3').then(mod => mod.initMutation());
   }
   if(page === 'tambah') {
-    import('./pages/transaction.js').then(mod => mod.initTransaction());
+    import('./pages/transaction.js?v=3').then(mod => mod.initTransaction());
   }
   if(page === 'tagihan') {
-    import('./pages/bills.js').then(mod => mod.initBills());
+    import('./pages/bills.js?v=3').then(mod => mod.initBills());
   }
   if(page === 'riwayat') {
-    import('./pages/history.js').then(mod => mod.initHistory());
+    import('./pages/history.js?v=3').then(mod => mod.initHistory());
   }
 });
 
 window.addEventListener('langChange', () => {
-  import('./pages/dashboard.js').then(mod => mod.initDashboard());
-  import('./pages/mutation.js').then(mod => mod.renderMutasiHistory());
-  import('./pages/transaction.js').then(mod => mod.renderActHistory());
-  import('./pages/bills.js').then(mod => mod.renderTagList());
-  import('./pages/history.js').then(mod => mod.renderHistory());
-  import('./pages/sidebar.js').then(mod => mod.renderCOA()); 
+  import('./pages/dashboard.js?v=3').then(mod => mod.initDashboard());
+  import('./pages/mutation.js?v=3').then(mod => mod.renderMutasiHistory());
+  import('./pages/transaction.js?v=3').then(mod => mod.renderActHistory());
+  import('./pages/bills.js?v=3').then(mod => mod.renderTagList());
+  import('./pages/history.js?v=3').then(mod => mod.renderHistory());
+  import('./pages/sidebar.js?v=3').then(mod => mod.renderCOA()); 
 });
 
 /* ===== SERVICE WORKER ===== */
