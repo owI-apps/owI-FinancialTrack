@@ -9,12 +9,11 @@ let state = {
   logs: []
 };
 
-// FLAG KEAMANAN: Cek apakah data berhasil dimuat
 let isStateInitialized = false;
 
 export function loadState() {
   try {
-    // 1. Cek & pindahin kalau masih pakai key lama
+    // Pindahin data dari key lama ke key baru kalau ada
     const oldState = localStorage.getItem('shadow_state');
     if(oldState) {
       localStorage.setItem('owi_fintrack_state', oldState);
@@ -26,44 +25,43 @@ export function loadState() {
       const p = JSON.parse(s);
       if (p && typeof p === 'object') {
         Object.assign(state, p);
-        isStateInitialized = true; // TANDAI KALO DATA BERHASIL DIMUAT
+        isStateInitialized = true;
       }
     } else {
-      isStateInitialized = true; // Pertama kali pakai, wajar kosong
-      console.log("💡 DB: Belum ada data tersimpan. Menggunakan data default.");
+      isStateInitialized = true; // Pertama kali pakai
     }
+    
+    // Validasi array penting biar gak crash
+    if(!state.accounts || !state.accounts.length) state.accounts = [{ id:'dompet-utama', name:'Dompet Utama', type:'Cash', balance:0, permanent:true }];
+    if(!state.mutations) state.mutations = [];
+    if(!state.transactions) state.transactions = [];
+    if(!state.debts) state.debts = [];
+    if(!state.receivables) state.receivables = [];
+    if(!state.logs) state.logs = [];
+
   } catch(e) {
-    console.error("🚨 DB GAGAL MEMUAT DATA! LocalStorage mungkin korup atau penuh. Aplikasi akan jalan tapi MENCEGAH penyimpanan agar data lama tidak tertimpa.", e);
-    // JANGAN set isStateInitialized = true. Biarkan false agar saveState() ditolak!
+    console.error("DB Error: Gagal memuat data. Penyimpanan mungkin korup atau penuh.", e);
+    // Jangan set flag true, agar saveState() ditolak dan data lama tidak tertimpa
   }
 }
 
 export function saveState() {
-  // KEAMANAN UTAMA: Jangan pernah simpan data kalau loadState sebelumnya gagal!
-  if (!isStateInitialized) {
-    console.warn("⚠️ DB: PENYIMPANAN DITOLAK! Data sebelumnya gagal dimuat. Kita tidak ingin menimpa data Anda dengan data kosong.");
-    return;
-  }
+  if (!isStateInitialized) return; // Abaikan kalau data awal gagal dimuat
 
   try {
-    const jsonString = JSON.stringify(state);
-    localStorage.setItem('owi_fintrack_state', jsonString);
-    // Console log ini bisa lu hapus kalau udah stabil, buat sementara biarkan biar keliatan
-    // console.log("💾 DB: Data berhasil disimpan. Ukuran:", jsonString.length, "karakter");
+    localStorage.setItem('owi_fintrack_state', JSON.stringify(state));
   } catch(e) {
-    console.error("🚨 DB: GAGAL MENYIMPAN (Memori Penuh)!. Menghapus foto bukti otomatis...", e);
+    console.error("DB Error: Penyimpanan penuh! Menghapus foto bukti otomatis...", e);
     
-    // PLAN B: Hapus semua foto biar ukuran data mengecil
+    // Plan B: Hapus foto biar ukuran mengecil
     state.receivables.forEach(r => r.receiptImage = null);
     state.userPhoto = null;
 
     try {
-      const jsonString = JSON.stringify(state);
-      localStorage.setItem('owi_fintrack_state', jsonString);
-      console.log("✅ DB: Berhasil simpan setelah foto dihapus.");
-      alert("⚠️ Memori penyimpanan penuh! Foto bukti & profil dihapus otomatis agar data saldo Anda tersimpan.");
+      localStorage.setItem('owi_fintrack_state', JSON.stringify(state));
+      alert("⚠️ Memori penuh! Foto bukti & profil dihapus otomatis agar data saldo Anda tersimpan.");
     } catch(e2) {
-      console.error("🚨 DB: GAGAL TOTAL MENYIMPAN meski tanpa foto. Data tidak tertulis.", e2);
+      console.error("DB Error: Gagal total menyimpan data.", e2);
       alert("❌ Penyimpanan penuh parah! Data gagal disimpan.");
     }
   }
