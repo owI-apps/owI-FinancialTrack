@@ -27,7 +27,6 @@ export function loadState() {
       if (p && typeof p === 'object') {
         Object.assign(state, p);
         isStateInitialized = true; // TANDAI KALO DATA BERHASIL DIMUAT
-        console.log("✅ DB: Data berhasil dimuat dari LocalStorage. Saldo:", state.accounts.reduce((acc, cur) => acc + cur.balance, 0));
       }
     } else {
       isStateInitialized = true; // Pertama kali pakai, wajar kosong
