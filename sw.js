@@ -1,4 +1,4 @@
-const CACHE_NAME = 'owi-fintrack-v6'; // GANTI JADI v6
+const CACHE_NAME = 'owi-fintrack-final'; // GANTI JADI v6
 const urlsToCache = [
   './',
   './index.html',
