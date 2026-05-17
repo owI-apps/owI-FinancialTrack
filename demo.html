@@ -23,7 +23,7 @@
     
     /* CYBER BACKGROUND */
     .cyber-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(circle at 50% 0%, #0f1a12 0%, #05080a 70%); }
-    .grid-overlay { position: absolute; inset: 0; background-image: linear-gradient(var(--neon-glow) 1px, transparent 1px), linear-gradient(90deg, var(--neon-glow) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.15; animation: gridMove 20s linear infinite; }
+    .grid-overlay { position: absolute; inset: 0; background-image: linear-gradient(var(--neon-glow) 1px, transparent 1px), linear-gradient(90deg, var(--neon-glow) 1px, transparent 1px); background-size: 60px 60px; animation: gridMove 20s linear infinite; }
     @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(60px); } }
     .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.3; animation: float 10s ease-in-out infinite alternate; }
     .orb-1 { width: 500px; height: 500px; background: var(--neon-dim); top: -150px; left: -150px; }
@@ -34,24 +34,24 @@
     .neon-text { color: var(--neon); text-shadow: 0 0 15px var(--neon-dim); }
 
     /* NAVBAR */
-    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 8, 10, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 8, 10, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
     .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--neon); display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .logo-dot { width: 10px; height: 10px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 8px var(--neon); animation: pulse-dot 2s infinite; }
     @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .nav-links { display: flex; gap: 30px; }
     .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
     .nav-links a:hover { color: var(--neon); }
-    .btn-launch { padding: 10px 24px; background: transparent; border: 1px solid var(--neon); color: var(--neon); font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif; }
+    .btn-launch { padding: 10px 24px; background: transparent; border: 1px solid var(--neon); color: var(--neon); font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
     .btn-launch:hover { background: var(--neon); color: #000; box-shadow: 0 0 25px var(--neon-dim); }
 
     /* HERO */
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 80px; position: relative; }
     .hero-logo-container { margin-bottom: 40px; position: relative; }
-    .hero-logo { width: 120px; height: 120px; border-radius: 30px; border: 3px solid var(--neon); box-shadow: 0 0 40px rgba(133, 166, 51, 0.4), inset 0 0 20px rgba(133, 166, 51, 0.1); animation: float-logo 6s ease-in-out infinite alternate; background-color: #000; }
+    .hero-logo { width: 120px; height: 120px; border-radius: 30px; border: 3px solid var(--neon); box-shadow: 0 0 40px rgba(133, 166, 51, 0.4), inset 0 0 20px rgba(133, 166, 51, 0.1); animation: float-logo 4s ease-in-out infinite; }
     @keyframes float-logo { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-15px) rotate(2deg); } }
     .hero-logo-ring { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 1px dashed var(--neon-dim); border-radius: 34px; animation: spin-slow 20s linear infinite; }
     @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .hero-tag { display: inline-block; padding: 6px 16px; border: 1px solid var(--glass-border); border-radius: 20px; font-size: 0.8rem; color: var(--neon); margin-bottom: 24px; background: rgba(133, 166, 51, 0.1); letter-spacing: 2px; }
+    .hero-tag { display: inline-block; padding: 6px 16px; border: 1px solid var(--glass-border); border-radius: 20px; font-size: 0.8rem; color: var(--neon); margin-bottom: 24px; background: rgba(133, 166, 51, 0.08); }
     .hero-title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; }
     .hero-sub { max-width: 600px; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
     
@@ -59,7 +59,7 @@
     .features { padding: 80px 5%; }
     .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
-    .glass-card { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 32px; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; backdrop-filter: blur(5px); }
+    .glass-card { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 32px; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
     .glass-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); border-color: var(--neon); }
     .glass-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
     .glass-card:hover::before { opacity: 1; }
@@ -78,7 +78,7 @@
     .carousel-track { display: flex; gap: 30px; width: max-content; animation: scroll-carousel 35s linear infinite; }
     .carousel-track:hover { animation-play-state: paused; }
     @keyframes scroll-carousel { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    .carousel-card { width: 280px; height: 500px; flex-shrink: 0; background: #15191d; border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5), 5px 5px 0px rgba(133, 166, 51, 0.1); position: relative; transition: transform 0.4s ease, box-shadow 0.4s ease; transform: rotate(-1deg); }
+    .carousel-card { width: 280px; height: 500px; flex-shrink: 0; background: #15191d; border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); transition: all 0.3s ease; }
     .carousel-card:nth-child(even) { transform: rotate(1deg); margin-top: 20px; }
     .carousel-card:nth-child(3n) { transform: rotate(-0.5deg); }
     .carousel-card:hover { transform: rotate(0deg) scale(1.05) !important; z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--neon-glow); border-color: var(--neon); }
@@ -94,7 +94,7 @@
 
     /* CTA */
     .cta { padding: 100px 20px; text-align: center; }
-    .btn-massive { padding: 18px 60px; font-size: 1.2rem; font-weight: 700; background: var(--neon); color: #000; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; box-shadow: 0 0 30px var(--neon-dim); font-family: 'Space Grotesk', sans-serif; }
+    .btn-massive { padding: 18px 60px; font-size: 1.2rem; font-weight: 700; background: var(--neon); color: #000; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
     .btn-massive:hover { transform: scale(1.05); box-shadow: 0 0 60px var(--neon); }
     .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.8rem; }
     .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
@@ -126,12 +126,12 @@
   <section class="features" id="features">
     <h2 class="section-title reveal">Fitur <span class="neon-text">Unggulan</span></h2>
     <div class="card-grid">
-      <div class="glass-card reveal"><div class="card-icon">⌛</div><h3 class="card-title">Dashboard Prediktif</h3><p class="card-desc">Pantau saldo, perbandingan pemasukan/pengeluaran harian & bulanan secara real-time. Dilengkapi Skor Kesehatan Keuangan berbasis algoritma yang menghitung rasio tabungan, utang, dan dana darurat Anda.</p><div class="tech-stack"><span class="tech-badge">Auto-Update</span><span class="tech-badge">Health Score</span></div></div>
-      <div class="glass-card reveal"><div class="card-icon">🔁</div><h3 class="card-title">Multi-Account & Mutasi</h3><p class="card-desc">Buat dompet virtual tanpa batas (Cash, Bank, E-Wallet, Crypto). Pindahkan saldo antar akun secara instan dengan validasi real-time agar saldo tidak pernah minus.</p><div class="tech-stack"><span class="tech-badge">Multi-Wallet</span><span class="tech-badge">Transfer Logic</span></div></div>
-      <div class="glass-card reveal"><div class="card-icon">🤖</div><h3 class="card-title">Smart Bills & Debt</h3><p class="card-desc">Tracking Hutang & Piutang dengan sistem jatuh tempo cerdas. Upload bukti transfer, bayar cicilan, dan dapatkan peringatan dini untuk tagihan yang mendekati jatuh tempo.</p><div class="tech-stack"><span class="tech-badge">Due Alert</span><span class="tech-badge">Receipt Upload</span></div></div>
-      <div class="glass-card reveal"><div class="card-icon">🧠</div><h3 class="card-title">Saran Keuangan AI</h3><p class="card-desc">Bukan sekadar pencatatan. Analisis cerdas membaca polana pengeluaranmu dan memberikan saran prioritas, seperti mengurangi pengeluaran kategori terbesar atau menagih piutang yang tertunda.</p><div class="tech-stack"><span class="tech-badge">Auto-Suggest</span><span class="tech-badge">Spending Insight</span></div></div>
-      <div class="glass-card reveal"><div class="card-icon">🛡️</div><h3 class="card-title">Zero-Server Privacy</h3><p class="card-desc">100% data tersimpan di perangkatmu (localStorage). Tidak ada database cloud, tidak ada API pihak ketiga. Kebebasan finansial berarti kebebasan data pribadi.</p><div class="tech-stack"><span class="tech-badge">Offline-First</span><span class="tech-badge">Local DB</span></div></div>
-      <div class="glass-card reveal"><div class="card-icon">📱</div><h3 class="card-title">Native App Experience</h3><p class="card-desc">Install langsung dari browser (PWA). Tampilan responsive, multi-bahasa (ID/EN), dark mode elegan, dan berjalan sehalus aplikasi native di Android & iOS.</p><div class="tech-stack"><span class="tech-badge">PWA Ready</span><span class="tech-badge">i18n</span></div></div>
+      <div class="glass-card reveal"><div class="card-icon">⌛</div><h3 class="card-title">Dashboard Prediktif</h3><p class="card-desc">Pantau saldo, perbandingan pemasukan/pengeluaran harian & bulanan dalam satu layar real-time.</p></div>
+      <div class="glass-card reveal"><div class="card-icon">🔁</div><h3 class="card-title">Multi-Account & Mutasi</h3><p class="card-desc">Buat dompet virtual tanpa batas (Cash, Bank, E-Wallet, Crypto). Catat setiap transaksi dengan detail sempurna.</p></div>
+      <div class="glass-card reveal"><div class="card-icon">🤖</div><h3 class="card-title">Smart Bills & Debt</h3><p class="card-desc">Tracking Hutang & Piutang dengan sistem jatuh tempo cerdas dan notifikasi otomatis.</p></div>
+      <div class="glass-card reveal"><div class="card-icon">🧠</div><h3 class="card-title">Saran Keuangan AI</h3><p class="card-desc">Bukan sekadar pencatatan. Analisis cerdas membaca pola pengeluaranmu dan memberikan rekomendasi finansial.</p></div>
+      <div class="glass-card reveal"><div class="card-icon">🛡️</div><h3 class="card-title">Zero-Server Privacy</h3><p class="card-desc">100% data tersimpan di perangkatmu (localStorage). Tidak ada upload ke cloud, privacy terjamin!</p></div>
+      <div class="glass-card reveal"><div class="card-icon">📱</div><h3 class="card-title">Native App Experience</h3><p class="card-desc">Install langsung dari browser (PWA). Tampilan responsif sempurna di desktop, tablet, & smartphone.</p></div>
     </div>
   </section>
 
@@ -140,26 +140,26 @@
     <div class="carousel-wrapper reveal">
       <div class="carousel-track" id="carouselTrack">
         <!-- MENGGUNAKAN PLACEHOLDER TERJAMIN MULUS TANPA 404 -->
-        <div class="carousel-card"><img src=".assets/img/ss1.png" alt="Dashboard UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss2.png" alt="Transaction UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss3.png" alt="Mutation UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss4.png" alt="Bills UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss5.png" alt="History UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss6.png" alt="Settings UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss1.png" alt="Dashboard UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss2.png" alt="Transaction UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss3.png" alt="Mutation UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss4.png" alt="Bills UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss5.png" alt="History UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss6.png" alt="Settings UI"></div>
         <!-- DUPLICATE UNTUK INFINITE SCROLL -->
-        <div class="carousel-card"><img src=".assets/img/ss1.png" alt="Dashboard UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss2.png" alt="Transaction UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss3.png" alt="Mutation UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss4.png" alt="Bills UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss5.png" alt="History UI"></div>
-        <div class="carousel-card"><img src=".assets/img/ss6.png" alt="Settings UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss1.png" alt="Dashboard UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss2.png" alt="Transaction UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss3.png" alt="Mutation UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss4.png" alt="Bills UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss5.png" alt="History UI"></div>
+        <div class="carousel-card"><img src="./assets/img/ss6.png" alt="Settings UI"></div>
       </div>
     </div>
 
     <div class="tech-desc-grid reveal">
-      <div class="tech-item"><h3>Vanilla JS ES6 Modules</h3><p>Tanpa framework berat. Kode terstruktur dalam modul-modul independen, menghasilkan performa paling ringan dan load time tercepat tanpa dependensi pihak ketiga.</p></div>
-      <div class="tech-item"><h3>Progressive Web App</h3><p>Service Worker & Manifest memungkinkan aplikasi berjalan layaknya native, bisa di-install di homescreen, dan tetap berfungsi meski koneksi internet terputus.</p></div>
-      <div class="tech-item"><h3>Client-Side Database</h3><p>LocalStorage sebagai database lokal. Data dienkapsulasi dan diproses sepenuhnya di browser klien, menjamin 0% kebocoran privasi ke server manapun.</p></div>
+      <div class="tech-item"><h3>Vanilla JS ES6 Modules</h3><p>Tanpa framework berat. Kode terstruktur dalam modul-modul independen, menghasilkan performa paling ringan dan load time tercepat tanpa dependencies.</p></div>
+      <div class="tech-item"><h3>Progressive Web App</h3><p>Service Worker & Manifest memungkinkan aplikasi berjalan layaknya native, bisa di-install di homescreen, dan tetap berfungsi meski koneksi internet hilang.</p></div>
+      <div class="tech-item"><h3>Client-Side Database</h3><p>LocalStorage sebagai database lokal. Data dienkapsulasi dan diproses sepenuhnya di browser klien, menjamin 0% kebocoran privasi ke server eksternal.</p></div>
       <div class="tech-item"><h3>Glassmorphism UI</h3><p>Desain antarmuka modern dengan efek backdrop blur, transparansi, dan neon army-green yang memberikan kesan futuristik dan elegan.</p></div>
     </div>
   </section>
