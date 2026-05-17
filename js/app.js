@@ -1,6 +1,3 @@
-console.log("🔥🔥🔥 OWI APP.JS V3.0 STARTED 🔥🔥🔥");
-
-// HAPUS SEMUA ?v=3 DI BAWAH INI BIAR MODUL NGGAK PECAH!
 import { loadState, getState } from './db.js';
 import { applyI18n, setLang } from './i18n.js';
 import { initCoreUI, setTheme, updateGreeting, updateDashTime } from './ui.js';
